@@ -10,7 +10,7 @@ public class Grid {
         w = width;
         h = height;
         int size = w * h;
-        cells = new ArrayList<Piece>(Collections.nCopies(size, Piece.E));
+        cells = new ArrayList<>(Collections.nCopies(size, Piece.E));
     }
 
     public void display(Skin skin) {
