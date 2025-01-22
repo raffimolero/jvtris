@@ -1,17 +1,18 @@
 public enum Piece {
-    E,
+    EMPTY,
     I,
     J,
     L,
     O,
     S,
     T,
-    Z;
+    Z,
+    GARBAGE;
 
     public static final Piece[] PIECES = { I, J, L, O, S, T, Z };
 
-    public boolean isEmpty() {
-        return this == E;
+    public boolean isBlocked() {
+        return this != EMPTY;
     }
 
     public Grid toGrid() {

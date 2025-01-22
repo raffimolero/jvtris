@@ -35,11 +35,17 @@ public class Main {
                 case 'a' -> {
                     movingPiece[0].unplace(grid);
                     movingPiece[0].targetX--;
+                    if (movingPiece[0].isBlocked(grid)) {
+                        movingPiece[0].targetX++;
+                    }
                     movingPiece[0].place(grid);
                 }
                 case 'd' -> {
                     movingPiece[0].unplace(grid);
                     movingPiece[0].targetX++;
+                    if (movingPiece[0].isBlocked(grid)) {
+                        movingPiece[0].targetX--;
+                    }
                     movingPiece[0].place(grid);
                 }
                 case ' ' -> {

@@ -15,8 +15,8 @@ public class MovableGrid {
                 int destX = targetX + x;
                 int destY = targetY + y;
                 Piece cell = data.getCell(x, y);
-                if (!cell.isEmpty()) {
-                    target.setCell(destX, destY, Piece.E);
+                if (cell.isBlocked()) {
+                    target.setCell(destX, destY, Piece.EMPTY);
                 }
             }
         }
@@ -27,7 +27,7 @@ public class MovableGrid {
             for (int x = 0; x < data.h; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
-                if (!target.getCell(destX, destY).isEmpty()) {
+                if (target.getCell(destX, destY).isBlocked()) {
                     return true;
                 }
             }
@@ -37,14 +37,11 @@ public class MovableGrid {
 
     /**
      * Attempts to place this movable grid inside the parent grid.
-     * Does nothing if something is in the way.
+     * Throws an exception if something is in the way.
      * @param target the parent grid to place this movable grid on
-     * @return true if the placement was successful; false if something was blocking placement.
      */
-    public boolean place(Grid target) {
-        if (isBlocked(target)) {
-            return false;
-        }
+    public void place(Grid target) {
+        assert !isBlocked(target);
         for (int y = 0; y < data.w; y++) {
             for (int x = 0; x < data.h; x++) {
                 int destX = targetX + x;
@@ -53,6 +50,5 @@ public class MovableGrid {
                 target.setCell(destX, destY, cell);
             }
         }
-        return true;
     }
 }
