@@ -14,14 +14,33 @@ public class Grid {
     }
 
     public void display(Skin skin) {
+        // top left corner
+        System.out.print("+-");
+        // top bar
+        for (int x = 0; x < w; x++) {
+            System.out.print("--");
+        }
+        // top right corner
+        System.out.println("+");
         for (int y = 0; y < h; y++) {
+            // left edge
             System.out.print("| ");
             for (int x = 0; x < w; x++) {
                 Piece cell = getCell(x, y);
+                // cell
                 System.out.print(skin.pieceChar(cell) + " ");
             }
+            // right edge
             System.out.println("|");
         }
+        // bottom left corner
+        System.out.print("+-");
+        // bottom bar
+        for (int x = 0; x < w; x++) {
+            System.out.print("--");
+        }
+        // bottom right corner
+        System.out.println("+");
     }
 
     int getIndex(int x, int y) {

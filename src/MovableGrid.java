@@ -9,8 +9,17 @@ public class MovableGrid {
         targetY = y;
     }
 
-    public void remove(Grid parent) {
-
+    public void unplace(Grid target) {
+        for (int y = 0; y < data.w; y++) {
+            for (int x = 0; x < data.h; x++) {
+                int destX = targetX + x;
+                int destY = targetY + y;
+                Piece cell = data.getCell(x, y);
+                if (!cell.isEmpty()) {
+                    target.setCell(destX, destY, Piece.E);
+                }
+            }
+        }
     }
 
     public boolean isBlocked(Grid target) {
