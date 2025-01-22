@@ -9,6 +9,8 @@ public class Queue {
 
     Queue(int targetLength) {
         targetLen = targetLength;
+        queue = new ArrayList<>(targetLen);
+        refill();
     }
 
     public Piece nextPiece() {
