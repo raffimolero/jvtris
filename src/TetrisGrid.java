@@ -27,6 +27,16 @@ public class TetrisGrid {
         grid.display(skin);
     }
 
+    public String[][] table() {
+        String[][] out = new String[grid.h][grid.w];
+        for (int y = 0; y < grid.h; y++) {
+            for (int x = 0; x < grid.w; x++) {
+                out[y][x] = "" + grid.getCell(x, y);
+            }
+        }
+        return out;
+    }
+
     /**
      * Attempts to move the moving piece by x, y.
      * @param x horizontal displacement, positive to the right
