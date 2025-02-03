@@ -9,7 +9,7 @@ public record Skin(Color[] pieces) {
             Color.ORANGE,
             Color.YELLOW,
             Color.GREEN,
-            Color.PINK,
+            Color.MAGENTA,
             Color.RED,
         }
     );

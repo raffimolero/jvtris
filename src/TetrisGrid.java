@@ -3,6 +3,7 @@ public class TetrisGrid {
     Skin skin;
     Queue queue;
     MovableGrid movingPiece;
+    public int score;
 
     public TetrisGrid() {
         this(Skin.DEFAULT, 5, 10, 20);
@@ -13,6 +14,7 @@ public class TetrisGrid {
         this.skin = Skin.DEFAULT;
         queue = new Queue(queueLength);
         movingPiece = new MovableGrid(new Grid(0, 0), width / 2, 2);
+        score = 0;
     }
 
     public void lockPiece() {
@@ -21,9 +23,41 @@ public class TetrisGrid {
         movingPiece.place(grid);
     }
 
+    /**
+     * checks for any full rows on the board.
+     * @return the number of lines cleared
+     */
+    public int clearLines() {
+        movingPiece.unplace(grid);
+        int linesCleared = 0;
+        for (int y = grid.h - 1; y >= 0; y--) {
+            boolean cleared = true;
+            for (int x = 0; x < grid.w; x++) {
+                if (grid.getCell(x, y).isEmpty()) {
+                    cleared = false;
+                    break;
+                }
+            }
+            if (cleared) {
+                linesCleared++;
+                // shift tiles down
+                for (int y2 = y; y2 >= 0; y2--) {
+                    for (int x = 0; x < grid.w; x++) {
+                        grid.setCell(x, y2 + 1, grid.getCell(x, y2));
+                    }
+                }
+                y++;
+            }
+        }
+        // TODO: what if movingPiece is blocked
+        movingPiece.place(grid);
+        return linesCleared;
+    }
+
     public void tick() {
         if (!moveBy(0, 1)) {
             lockPiece();
+            score += clearLines();
         }
     }
 

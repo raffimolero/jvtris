@@ -80,6 +80,15 @@ public class Main extends JPanel {
         int top = (HEIGHT - height) / 2;
         int left = (WIDTH - width) / 2;
 
+        // draw background
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        // draw score
+        g.setColor(Color.WHITE);
+        g.drawString("" + tetris.score, left, top - 20);
+
+        // draw grid
         for (int y = 0; y < tetris.grid.h; y++) {
             for (int x = 0; x < tetris.grid.w; x++) {
                 Piece tile = tetris.grid.getCell(x, y);
@@ -104,7 +113,7 @@ public class Main extends JPanel {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP -> tetris.rotateBy(1);
-                    case KeyEvent.VK_DOWN -> tetris.moveBy(0, 1);
+                    case KeyEvent.VK_DOWN -> tetris.tick();
                     case KeyEvent.VK_LEFT -> tetris.moveBy(-1, 0);
                     case KeyEvent.VK_RIGHT -> tetris.moveBy(1, 0);
                 }

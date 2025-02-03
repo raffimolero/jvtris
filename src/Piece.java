@@ -11,6 +11,10 @@ public enum Piece {
 
     public static final Piece[] PIECES = { I, J, L, O, S, T, Z };
 
+    public boolean isEmpty() {
+        return this == EMPTY;
+    }
+
     public boolean isBlocked() {
         return this != EMPTY;
     }
