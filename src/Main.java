@@ -60,11 +60,19 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 
+/**
+ * TODO:
+ * - ghost piece
+ * - queue
+ * - hold
+ * - tetris clear effect
+ * - score system
+ */
 
 public class Main extends JPanel {
-    private int HEIGHT = 500;
-    private int WIDTH = 400;
-    private int size = 15;
+    private int HEIGHT = 900;
+    private int WIDTH = 600;
+    private int size = 30;
     private int margin = 2;
     private static TetrisGrid tetris = new TetrisGrid();
 

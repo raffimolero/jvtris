@@ -19,7 +19,7 @@ public class TetrisGrid {
 
     public void lockPiece() {
         Piece piece = queue.nextPiece();
-        movingPiece = new MovableGrid(piece.toGrid(), 5, 2);
+        movingPiece = new MovableGrid(piece.toGrid(), 3, 0);
         movingPiece.place(grid);
     }
 
