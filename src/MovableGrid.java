@@ -9,16 +9,20 @@ public class MovableGrid {
         targetY = y;
     }
 
-    public void unplace(Grid target) {
-        for (int y = 0; y < data.w; y++) {
-            for (int x = 0; x < data.h; x++) {
-                int destX = targetX + x;
-                int destY = targetY + y;
-                Piece cell = data.getCell(x, y);
-                if (cell.isBlocked()) {
-                    target.setCell(destX, destY, Piece.EMPTY);
-                }
+    void rotateCw() {
+        Grid newData = new Grid(data.h, data.w);
+        for (int y = 0; y < newData.h; y++) {
+            for (int x = 0; x < newData.w; x++) {
+                //noinspection SuspiciousNameCombination
+                newData.setCell(x, y, data.getCell(y, data.w-1 - x));
             }
+        }
+        data = newData;
+    }
+
+    public void rotate(int timesCw90) {
+        for (int i = 0; i < timesCw90; i++) {
+            rotateCw();
         }
     }
 
@@ -33,6 +37,19 @@ public class MovableGrid {
             }
         }
         return false;
+    }
+
+    public void unplace(Grid target) {
+        for (int y = 0; y < data.w; y++) {
+            for (int x = 0; x < data.h; x++) {
+                int destX = targetX + x;
+                int destY = targetY + y;
+                Piece cell = data.getCell(x, y);
+                if (cell.isBlocked()) {
+                    target.setCell(destX, destY, Piece.EMPTY);
+                }
+            }
+        }
     }
 
     /**

@@ -64,4 +64,26 @@ public class TetrisGrid {
         movingPiece.place(grid);
         return !isBlocked;
     }
+
+    /**
+     * Attempts to rotate the moving piece 90 degrees clockwise times the argument.
+     * rotation happens at once; there are no intermediate steps.
+     * @param timesCw90 the number of times to rotate the piece clockwise.
+     * @return true if the space is not blocked in the target grid; false otherwise.
+     */
+    public boolean rotateBy(int timesCw90) {
+        // empty tile cannot be rotated
+        if (movingPiece.data.w * movingPiece.data.h == 0) {
+            return false;
+        }
+        movingPiece.unplace(grid);
+        timesCw90 %= 4;
+        movingPiece.rotate(timesCw90);
+        boolean isBlocked = movingPiece.isBlocked(grid);
+        if (isBlocked) {
+            movingPiece.rotate(4 - timesCw90);
+        }
+        movingPiece.place(grid);
+        return !isBlocked;
+    }
 }
