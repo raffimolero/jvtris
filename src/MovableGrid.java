@@ -27,7 +27,7 @@ public class MovableGrid {
             for (int x = 0; x < data.h; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
-                if (target.getCell(destX, destY).isBlocked()) {
+                if (data.getCell(x, y).isBlocked() && target.getCell(destX, destY).isBlocked()) {
                     return true;
                 }
             }
@@ -47,7 +47,9 @@ public class MovableGrid {
                 int destX = targetX + x;
                 int destY = targetY + y;
                 Piece cell = data.getCell(x, y);
-                target.setCell(destX, destY, cell);
+                if (cell.isBlocked()) {
+                    target.setCell(destX, destY, cell);
+                }
             }
         }
     }
