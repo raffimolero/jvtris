@@ -74,19 +74,30 @@ import java.awt.*;
 public class Main extends JPanel {
     private int HEIGHT = 500;
     private int WIDTH = 400;
-    private int size = 50;
+    private int size = 15;
+    private int margin = 2;
+    private TetrisGrid tetris = new TetrisGrid();
 
     private JFrame  frame;
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.blue);
+        int tileOffset = size + margin;
+        int width = tileOffset * tetris.grid.w - margin;
+        int height = tileOffset * tetris.grid.h - margin;
         // Offset the position to keep it centered
-        int pos = 150 - (int) (size * 0.5);
+        int top = (HEIGHT - height) / 2;
+        int left = (WIDTH - width) / 2;
 
-        // Draw the rectangle
-        g.fillRect(pos, pos, size, size);
+        for (int y = 0; y < tetris.grid.h; y++) {
+            for (int x = 0; x < tetris.grid.w; x++) {
+                Piece tile = tetris.grid.getCell(x, y);
+                Color col = tetris.skin.pieceColor(tile);
+                g.setColor(col);
+                g.fillRect(left + x * tileOffset, top + y * tileOffset, size, size);
+            }
+        }
     }
 
     public void createAndShowGUI(){
@@ -94,6 +105,7 @@ public class Main extends JPanel {
         frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         frame.getContentPane().add(this, BorderLayout.CENTER);
         frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
         // Add listener to the frame

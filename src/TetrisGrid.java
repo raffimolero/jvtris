@@ -22,10 +22,10 @@ public class TetrisGrid {
         movingPiece.place(grid);
     }
 
-    public void display() {
-        System.out.println("\033[2J"); // clear screen
-        grid.display(skin);
-    }
+//    public void display() {
+//        System.out.println("\033[2J"); // clear screen
+//        grid.display(skin);
+//    }
 
     public String[][] table() {
         String[][] out = new String[grid.h][grid.w];
