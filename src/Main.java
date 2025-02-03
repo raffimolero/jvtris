@@ -54,16 +54,6 @@
 //
 //        frame.setVisible(true);
 //
-//        Timer timer = new Timer();
-//
-//        // main clock
-//        timer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                tetris.tick();
-//                grid[0] = tetris.table();
-//            }
-//        }, 0, 1000);
 //    }
 //}
 import javax.swing.*;
@@ -76,7 +66,7 @@ public class Main extends JPanel {
     private int WIDTH = 400;
     private int size = 15;
     private int margin = 2;
-    private TetrisGrid tetris = new TetrisGrid();
+    private static TetrisGrid tetris = new TetrisGrid();
 
     private JFrame  frame;
 
@@ -100,7 +90,7 @@ public class Main extends JPanel {
         }
     }
 
-    public void createAndShowGUI(){
+    public JFrame createAndShowGUI() {
         JFrame frame = new JFrame("Events Demo");
         frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         frame.getContentPane().add(this, BorderLayout.CENTER);
@@ -115,22 +105,35 @@ public class Main extends JPanel {
                 // Check if an up key was pressed
                 if(e.getKeyCode() == KeyEvent.VK_UP){
                     size += 5;
+                    System.out.println("up");
                 }
                 // Check if a down key was pressed
                 if(e.getKeyCode() == KeyEvent.VK_DOWN){
                     size -=5;
+                    System.out.println("down");
                 }
                 // Call the repaint
                 repaint();
             }
         });
+
+        return frame;
     }
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Main project = new Main();
-                project.createAndShowGUI();
+                JFrame frame = project.createAndShowGUI();
+                ActionListener tick = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        tetris.tick();
+                        frame.repaint();
+                    }
+                };
+                Timer timer = new Timer(1000, tick);
+                timer.start();
             }
         });
     }
