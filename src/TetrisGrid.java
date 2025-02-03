@@ -41,9 +41,9 @@ public class TetrisGrid {
             if (cleared) {
                 linesCleared++;
                 // shift tiles down
-                for (int y2 = y; y2 >= 0; y2--) {
+                for (int y2 = y; y2 > 0; y2--) {
                     for (int x = 0; x < grid.w; x++) {
-                        grid.setCell(x, y2 + 1, grid.getCell(x, y2));
+                        grid.setCell(x, y2, grid.getCell(x, y2 - 1));
                     }
                 }
                 y++;
