@@ -102,17 +102,12 @@ public class Main extends JPanel {
         frame.addKeyListener(new KeyAdapter() {
             // Key Pressed method
             public void keyPressed(KeyEvent e) {
-                // Check if an up key was pressed
-                if(e.getKeyCode() == KeyEvent.VK_UP){
-                    size += 5;
-                    System.out.println("up");
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP -> tetris.moveBy(0, -1);
+                    case KeyEvent.VK_DOWN -> tetris.moveBy(0, 1);
+                    case KeyEvent.VK_LEFT -> tetris.moveBy(-1, 0);
+                    case KeyEvent.VK_RIGHT -> tetris.moveBy(1, 0);
                 }
-                // Check if a down key was pressed
-                if(e.getKeyCode() == KeyEvent.VK_DOWN){
-                    size -=5;
-                    System.out.println("down");
-                }
-                // Call the repaint
                 repaint();
             }
         });
