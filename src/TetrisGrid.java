@@ -15,11 +15,16 @@ public class TetrisGrid {
         movingPiece = new MovableGrid(new Grid(0, 0), width / 2, 2);
     }
 
-    public void tick() {
+    public void lockPiece() {
         Piece piece = queue.nextPiece();
-        movingPiece.unplace(grid);
         movingPiece = new MovableGrid(piece.toGrid(), 5, 2);
         movingPiece.place(grid);
+    }
+
+    public void tick() {
+        if (!moveBy(0, 1)) {
+            lockPiece();
+        }
     }
 
 //    public void display() {
@@ -44,6 +49,10 @@ public class TetrisGrid {
      * @return true if the space is not blocked in the target grid; false otherwise.
      */
     public boolean moveBy(int x, int y) {
+        // empty tile cannot be moved
+        if (movingPiece.data.w * movingPiece.data.h == 0) {
+            return false;
+        }
         movingPiece.unplace(grid);
         movingPiece.targetX += x;
         movingPiece.targetY += y;
@@ -53,6 +62,6 @@ public class TetrisGrid {
             movingPiece.targetY -= y;
         }
         movingPiece.place(grid);
-        return isBlocked;
+        return !isBlocked;
     }
 }
