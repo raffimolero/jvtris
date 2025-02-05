@@ -85,8 +85,8 @@ public class Main extends JPanel {
         int width = tileOffset * tetris.grid.w - margin;
         int height = tileOffset * tetris.grid.h - margin;
         // Offset the position to keep it centered
-        int top = (HEIGHT - height) / 2;
         int left = (WIDTH - width) / 2;
+        int top = (HEIGHT - height) / 2;
 
         // draw background
         g.setColor(Color.BLACK);
@@ -105,7 +105,22 @@ public class Main extends JPanel {
                 g.fillRect(left + x * tileOffset, top + y * tileOffset, size, size);
             }
         }
+
+        // draw held piece
+        if (tetris.heldPiece != null) {
+            Grid held = tetris.heldPiece.toGrid();
+            int offset = (4 + held.w) / 2;
+            for (int y = 0; y < held.h; y++) {
+                for (int x = 0; x < held.w; x++) {
+                    Piece tile = held.getCell(x, y);
+                    Color col = tetris.skin.pieceColor(tile);
+                    g.setColor(col);
+                    g.fillRect(left + (x - 1 - offset) * tileOffset, top + (y + 4 - offset) * tileOffset, size, size);
+                }
+            }
+        }
     }
+
 
     public JFrame createAndShowGUI() {
         JFrame frame = new JFrame("Events Demo");
@@ -124,7 +139,7 @@ public class Main extends JPanel {
                     case KeyEvent.VK_F -> tetris.rotateBy(1);
                     case KeyEvent.VK_D -> tetris.rotateBy(2);
                     case KeyEvent.VK_S -> tetris.rotateBy(3);
-                    case KeyEvent.VK_K -> tetris.tick();
+                    case KeyEvent.VK_K -> tetris.softDrop();
                     case KeyEvent.VK_J -> tetris.moveBy(-1, 0);
                     case KeyEvent.VK_L -> tetris.moveBy(1, 0);
                 }
@@ -138,16 +153,19 @@ public class Main extends JPanel {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                double gravity = 1;
+                int tickMs = (int)(1000 / gravity);
+
                 Main project = new Main();
                 JFrame frame = project.createAndShowGUI();
                 ActionListener tick = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        tetris.tick();
+                        tetris.softDrop();
                         frame.repaint();
                     }
                 };
-                Timer timer = new Timer(1000, tick);
+                Timer timer = new Timer(tickMs, tick);
                 timer.start();
             }
         });

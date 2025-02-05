@@ -1,6 +1,6 @@
 public class TetrisGrid {
-    Grid grid;
     Skin skin;
+    Grid grid;
     Queue queue;
     Piece heldPiece;
     Piece currentPiece;
@@ -70,7 +70,7 @@ public class TetrisGrid {
         return linesCleared;
     }
 
-    public void tick() {
+    public void softDrop() {
         if (!moveBy(0, 1)) {
             lockPiece();
             score += clearLines();
