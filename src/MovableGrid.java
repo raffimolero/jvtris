@@ -1,23 +1,23 @@
 public class MovableGrid {
-    Grid data;
+    Grid grid;
     int targetX;
     int targetY;
 
     MovableGrid(Grid shape, int x, int y) {
-        data = shape;
+        grid = shape;
         targetX = x;
         targetY = y;
     }
 
     void rotateCw() {
-        Grid newData = new Grid(data.h, data.w);
+        Grid newData = new Grid(grid.h, grid.w);
         for (int y = 0; y < newData.h; y++) {
             for (int x = 0; x < newData.w; x++) {
                 //noinspection SuspiciousNameCombination
-                newData.setCell(x, y, data.getCell(y, data.w-1 - x));
+                newData.setCell(x, y, grid.getCell(y, grid.w-1 - x));
             }
         }
-        data = newData;
+        grid = newData;
     }
 
     public void rotate(int timesCw90) {
@@ -27,11 +27,11 @@ public class MovableGrid {
     }
 
     public boolean isBlocked(Grid target) {
-        for (int y = 0; y < data.w; y++) {
-            for (int x = 0; x < data.h; x++) {
+        for (int y = 0; y < grid.w; y++) {
+            for (int x = 0; x < grid.h; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
-                if (data.getCell(x, y).isBlocked() && target.getCell(destX, destY).isBlocked()) {
+                if (grid.getCell(x, y).isBlocked() && target.getCell(destX, destY).isBlocked()) {
                     return true;
                 }
             }
@@ -40,11 +40,11 @@ public class MovableGrid {
     }
 
     public void unplace(Grid target) {
-        for (int y = 0; y < data.w; y++) {
-            for (int x = 0; x < data.h; x++) {
+        for (int y = 0; y < grid.w; y++) {
+            for (int x = 0; x < grid.h; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
-                Piece cell = data.getCell(x, y);
+                Piece cell = grid.getCell(x, y);
                 if (cell.isBlocked()) {
                     target.setCell(destX, destY, Piece.EMPTY);
                 }
@@ -59,11 +59,11 @@ public class MovableGrid {
      */
     public void place(Grid target) {
         assert !isBlocked(target);
-        for (int y = 0; y < data.w; y++) {
-            for (int x = 0; x < data.h; x++) {
+        for (int y = 0; y < grid.w; y++) {
+            for (int x = 0; x < grid.h; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
-                Piece cell = data.getCell(x, y);
+                Piece cell = grid.getCell(x, y);
                 if (cell.isBlocked()) {
                     target.setCell(destX, destY, cell);
                 }

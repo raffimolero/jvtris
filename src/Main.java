@@ -102,7 +102,11 @@ public class Main extends JPanel {
                 Piece tile = tetris.grid.getCell(x, y);
                 Color col = tetris.skin.pieceColor(tile);
                 g.setColor(col);
-                g.fillRect(left + x * tileOffset, top + y * tileOffset, size, size);
+                g.fillRect(
+                        left + x * tileOffset,
+                        top + y * tileOffset,
+                        size,
+                        size);
             }
         }
 
@@ -110,7 +114,7 @@ public class Main extends JPanel {
         if (tetris.heldPiece != null) {
             Grid piece = tetris.heldPiece.toGrid();
             double offset = (4 + piece.w) / -2.0;
-            double offX = offset - 1;
+            double offX = offset - 0.5;
             double offY = offset + 4;
             for (int y = 0; y < piece.h; y++) {
                 for (int x = 0; x < piece.w; x++) {
@@ -126,6 +130,7 @@ public class Main extends JPanel {
             }
         }
 
+        // draw queue
         for (int i = 0; i < tetris.queue.targetLen; i++) {
             Grid piece = tetris.queue.queue.get(i).toGrid();
             double offset = (4 + piece.w) / -2.0;
@@ -139,6 +144,25 @@ public class Main extends JPanel {
                     g.fillRect(
                             (int)(left + (x + offX) * tileOffset),
                             (int)(top + (y + offY) * tileOffset),
+                            size,
+                            size);
+                }
+            }
+        }
+
+        // draw ghost
+        g.setColor(tetris.skin.pieceColor(Piece.GARBAGE));
+        if (tetris.currentPiece != null) {
+            MovableGrid ghost = tetris.dropGhost();
+            for (int y = 0; y < ghost.grid.h; y++) {
+                for (int x = 0; x < ghost.grid.w; x++) {
+                    Piece tile = ghost.grid.getCell(x, y);
+                    if (tile.isEmpty()) {
+                        continue;
+                    }
+                    g.fillRect(
+                            left + (x + ghost.targetX) * tileOffset,
+                            top + (y + ghost.targetY) * tileOffset,
                             size,
                             size);
                 }

@@ -108,6 +108,22 @@ public class TetrisGrid {
         softDrop();
     }
 
+    public MovableGrid dropGhost() {
+        movingPiece.unplace(grid);
+        MovableGrid ghost = new MovableGrid(
+                currentPiece.toGrid(),
+                movingPiece.targetX,
+                movingPiece.targetY);
+
+        while (!ghost.isBlocked(grid)) {
+            ghost.targetY += 1;
+        }
+        ghost.targetY -= 1;
+        System.out.println("ghost.targetY = " + ghost.targetY);
+        movingPiece.place(grid);
+        return ghost;
+    }
+
 //    public void display() {
 //        System.out.println("\033[2J"); // clear screen
 //        grid.display(skin);
@@ -134,7 +150,7 @@ public class TetrisGrid {
             return false;
         }
         // empty tile cannot be moved
-        if (movingPiece.data.w * movingPiece.data.h == 0) {
+        if (movingPiece.grid.w * movingPiece.grid.h == 0) {
             return false;
         }
         movingPiece.unplace(grid);
@@ -160,7 +176,7 @@ public class TetrisGrid {
             return false;
         }
         // empty tile cannot be rotated
-        if (movingPiece.data.w * movingPiece.data.h == 0) {
+        if (movingPiece.grid.w * movingPiece.grid.h == 0) {
             return false;
         }
         movingPiece.unplace(grid);
