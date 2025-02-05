@@ -62,9 +62,9 @@ import java.awt.*;
 
 /**
  * TODO:
+ * - hard drop
  * - ghost piece
  * - queue
- * - hold
  * - tetris clear effect
  * - score system
  */
@@ -120,10 +120,13 @@ public class Main extends JPanel {
             // Key Pressed method
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP -> tetris.rotateBy(1);
-                    case KeyEvent.VK_DOWN -> tetris.tick();
-                    case KeyEvent.VK_LEFT -> tetris.moveBy(-1, 0);
-                    case KeyEvent.VK_RIGHT -> tetris.moveBy(1, 0);
+                    case KeyEvent.VK_A -> tetris.hold();
+                    case KeyEvent.VK_F -> tetris.rotateBy(1);
+                    case KeyEvent.VK_D -> tetris.rotateBy(2);
+                    case KeyEvent.VK_S -> tetris.rotateBy(3);
+                    case KeyEvent.VK_K -> tetris.tick();
+                    case KeyEvent.VK_J -> tetris.moveBy(-1, 0);
+                    case KeyEvent.VK_L -> tetris.moveBy(1, 0);
                 }
                 repaint();
             }

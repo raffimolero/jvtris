@@ -2,6 +2,8 @@ public class TetrisGrid {
     Grid grid;
     Skin skin;
     Queue queue;
+    Piece heldPiece;
+    Piece currentPiece;
     MovableGrid movingPiece;
     public int score;
 
@@ -14,12 +16,26 @@ public class TetrisGrid {
         this.skin = Skin.DEFAULT;
         queue = new Queue(queueLength);
         movingPiece = new MovableGrid(new Grid(0, 0), width / 2, 2);
+        currentPiece = null;
+        heldPiece = null;
         score = 0;
     }
 
+    public void hold() {
+        movingPiece.unplace(grid);
+        Piece tmp = currentPiece;
+        currentPiece = heldPiece;
+        heldPiece = tmp;
+        if (currentPiece == null) {
+            currentPiece = queue.nextPiece();
+        }
+        movingPiece = new MovableGrid(currentPiece.toGrid(), 3, 0);
+        movingPiece.place(grid);
+    }
+
     public void lockPiece() {
-        Piece piece = queue.nextPiece();
-        movingPiece = new MovableGrid(piece.toGrid(), 3, 0);
+        currentPiece = queue.nextPiece();
+        movingPiece = new MovableGrid(currentPiece.toGrid(), 3, 0);
         movingPiece.place(grid);
     }
 
