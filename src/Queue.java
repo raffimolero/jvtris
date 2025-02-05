@@ -14,7 +14,7 @@ public class Queue {
     }
 
     public Piece nextPiece() {
-        Piece out = queue.remove(queue.size() - 1);
+        Piece out = queue.remove(0);
         refill();
         return out;
     }

@@ -72,7 +72,7 @@ import java.awt.*;
 public class Main extends JPanel {
     private int HEIGHT = 900;
     private int WIDTH = 600;
-    private int size = 30;
+    private int size = 25;
     private int margin = 2;
     private static TetrisGrid tetris = new TetrisGrid();
 
@@ -108,14 +108,39 @@ public class Main extends JPanel {
 
         // draw held piece
         if (tetris.heldPiece != null) {
-            Grid held = tetris.heldPiece.toGrid();
-            int offset = (4 + held.w) / 2;
-            for (int y = 0; y < held.h; y++) {
-                for (int x = 0; x < held.w; x++) {
-                    Piece tile = held.getCell(x, y);
+            Grid piece = tetris.heldPiece.toGrid();
+            double offset = (4 + piece.w) / -2.0;
+            double offX = offset - 1;
+            double offY = offset + 4;
+            for (int y = 0; y < piece.h; y++) {
+                for (int x = 0; x < piece.w; x++) {
+                    Piece tile = piece.getCell(x, y);
                     Color col = tetris.skin.pieceColor(tile);
                     g.setColor(col);
-                    g.fillRect(left + (x - 1 - offset) * tileOffset, top + (y + 4 - offset) * tileOffset, size, size);
+                    g.fillRect(
+                            (int)(left + (x + offX) * tileOffset),
+                            (int)(top + (y + offY) * tileOffset),
+                            size,
+                            size);
+                }
+            }
+        }
+
+        for (int i = 0; i < tetris.queue.targetLen; i++) {
+            Grid piece = tetris.queue.queue.get(i).toGrid();
+            double offset = (4 + piece.w) / -2.0;
+            double offX = offset + 14.5;
+            double offY = offset + 4 + i * 4;
+            for (int y = 0; y < piece.h; y++) {
+                for (int x = 0; x < piece.w; x++) {
+                    Piece tile = piece.getCell(x, y);
+                    Color col = tetris.skin.pieceColor(tile);
+                    g.setColor(col);
+                    g.fillRect(
+                            (int)(left + (x + offX) * tileOffset),
+                            (int)(top + (y + offY) * tileOffset),
+                            size,
+                            size);
                 }
             }
         }
@@ -136,9 +161,10 @@ public class Main extends JPanel {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_A -> tetris.hold();
-                    case KeyEvent.VK_F -> tetris.rotateBy(1);
-                    case KeyEvent.VK_D -> tetris.rotateBy(2);
                     case KeyEvent.VK_S -> tetris.rotateBy(3);
+                    case KeyEvent.VK_D -> tetris.rotateBy(2);
+                    case KeyEvent.VK_F -> tetris.rotateBy(1);
+                    case KeyEvent.VK_SPACE -> tetris.hardDrop();
                     case KeyEvent.VK_K -> tetris.softDrop();
                     case KeyEvent.VK_J -> tetris.moveBy(-1, 0);
                     case KeyEvent.VK_L -> tetris.moveBy(1, 0);
@@ -161,7 +187,7 @@ public class Main extends JPanel {
                 ActionListener tick = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        tetris.softDrop();
+                        tetris.tick();
                         frame.repaint();
                     }
                 };

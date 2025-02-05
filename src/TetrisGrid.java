@@ -1,4 +1,5 @@
 public class TetrisGrid {
+    public boolean alive;
     Skin skin;
     Grid grid;
     Queue queue;
@@ -12,6 +13,7 @@ public class TetrisGrid {
     }
 
     public TetrisGrid(Skin skin, int queueLength, int width, int height) {
+        alive = true;
         grid = new Grid(width, height);
         this.skin = Skin.DEFAULT;
         queue = new Queue(queueLength);
@@ -22,6 +24,9 @@ public class TetrisGrid {
     }
 
     public void hold() {
+        if (!alive) {
+            return;
+        }
         movingPiece.unplace(grid);
         Piece tmp = currentPiece;
         currentPiece = heldPiece;
@@ -30,12 +35,20 @@ public class TetrisGrid {
             currentPiece = queue.nextPiece();
         }
         movingPiece = new MovableGrid(currentPiece.toGrid(), 3, 0);
+        if (movingPiece.isBlocked(grid)) {
+            alive = false;
+            return;
+        }
         movingPiece.place(grid);
     }
 
     public void lockPiece() {
         currentPiece = queue.nextPiece();
         movingPiece = new MovableGrid(currentPiece.toGrid(), 3, 0);
+        if (movingPiece.isBlocked(grid)) {
+            alive = false;
+            return;
+        }
         movingPiece.place(grid);
     }
 
@@ -70,11 +83,29 @@ public class TetrisGrid {
         return linesCleared;
     }
 
+    public void tick() {
+        if (!alive) {
+            return;
+        }
+        softDrop();
+    }
+
     public void softDrop() {
+        if (!alive) {
+            return;
+        }
         if (!moveBy(0, 1)) {
             lockPiece();
             score += clearLines();
         }
+    }
+
+    public void hardDrop() {
+        if (!alive) {
+            return;
+        }
+        while (moveBy(0, 1)) {}
+        softDrop();
     }
 
 //    public void display() {
@@ -99,6 +130,9 @@ public class TetrisGrid {
      * @return true if the space is not blocked in the target grid; false otherwise.
      */
     public boolean moveBy(int x, int y) {
+        if (!alive) {
+            return false;
+        }
         // empty tile cannot be moved
         if (movingPiece.data.w * movingPiece.data.h == 0) {
             return false;
@@ -122,6 +156,9 @@ public class TetrisGrid {
      * @return true if the space is not blocked in the target grid; false otherwise.
      */
     public boolean rotateBy(int timesCw90) {
+        if (!alive) {
+            return false;
+        }
         // empty tile cannot be rotated
         if (movingPiece.data.w * movingPiece.data.h == 0) {
             return false;
