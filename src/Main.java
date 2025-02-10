@@ -156,8 +156,10 @@ public class Main extends JPanel {
             MovableGrid ghost = tetris.dropGhost();
             for (int y = 0; y < ghost.grid.h; y++) {
                 for (int x = 0; x < ghost.grid.w; x++) {
+                    int gridX = x + ghost.targetX;
+                    int gridY = y + ghost.targetY;
                     Piece tile = ghost.grid.getCell(x, y);
-                    if (tile.isEmpty()) {
+                    if (tile.isEmpty() || tetris.grid.getCell(gridX, gridY).isBlocked()) {
                         continue;
                     }
                     g.fillRect(

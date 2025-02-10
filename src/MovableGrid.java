@@ -3,6 +3,12 @@ public class MovableGrid {
     int targetX;
     int targetY;
 
+    MovableGrid(MovableGrid piece) {
+        grid = new Grid(piece.grid);
+        targetX = piece.targetX;
+        targetY = piece.targetY;
+    }
+
     MovableGrid(Grid shape, int x, int y) {
         grid = shape;
         targetX = x;

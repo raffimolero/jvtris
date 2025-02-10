@@ -6,6 +6,15 @@ public class Grid {
     int h;
     ArrayList<Piece> cells;
 
+    public Grid(Grid other) {
+        this(other.w, other.h);
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                setCell(x, y, other.getCell(x, y));
+            }
+        }
+    }
+
     public Grid(int width, int height) {
         w = width;
         h = height;

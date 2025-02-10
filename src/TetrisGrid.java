@@ -110,10 +110,7 @@ public class TetrisGrid {
 
     public MovableGrid dropGhost() {
         movingPiece.unplace(grid);
-        MovableGrid ghost = new MovableGrid(
-                currentPiece.toGrid(),
-                movingPiece.targetX,
-                movingPiece.targetY);
+        MovableGrid ghost = new MovableGrid(movingPiece);
 
         while (!ghost.isBlocked(grid)) {
             ghost.targetY += 1;
