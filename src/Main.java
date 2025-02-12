@@ -198,22 +198,13 @@ public class Main extends JPanel {
             public void keyPressed(KeyEvent e) {
                 input.down(e.getKeyCode());
                 runEvents();
-//                switch (e.getKeyCode()) {
-//                    case KeyEvent.VK_A -> tetris.hold();
-//                    case KeyEvent.VK_S -> tetris.rotateBy(3);
-//                    case KeyEvent.VK_D -> tetris.rotateBy(2);
-//                    case KeyEvent.VK_F -> tetris.rotateBy(1);
-//                    case KeyEvent.VK_SPACE -> tetris.hardDrop();
-//                    case KeyEvent.VK_K -> tetris.softDrop();
-//                    case KeyEvent.VK_J -> tetris.moveBy(-1, 0);
-//                    case KeyEvent.VK_L -> tetris.moveBy(1, 0);
-//                }
                 repaint();
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 input.up(e.getKeyCode());
+                runEvents();
             }
         });
 

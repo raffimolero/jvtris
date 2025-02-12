@@ -23,6 +23,15 @@ public class TetrisGrid {
         score = 0;
     }
 
+    private void nextPiece() {
+        Grid piece = currentPiece.toGrid();
+        movingPiece = new MovableGrid(piece, 5 - ((piece.w + 1) / 2), 0);
+        if (movingPiece.isBlocked(grid)) {
+            alive = false;
+        }
+        movingPiece.place(grid);
+    }
+
     public void hold() {
         if (!alive) {
             return;
@@ -34,23 +43,13 @@ public class TetrisGrid {
         if (currentPiece == null) {
             currentPiece = queue.nextPiece();
         }
-        movingPiece = new MovableGrid(currentPiece.toGrid(), 3, 0);
-        if (movingPiece.isBlocked(grid)) {
-            alive = false;
-            return;
-        }
-        movingPiece.place(grid);
+        nextPiece();
     }
 
     public void lockPiece() {
         currentPiece = queue.nextPiece();
         Grid nextPiece = currentPiece.toGrid();
-        movingPiece = new MovableGrid(nextPiece, 3, 0);
-        if (movingPiece.isBlocked(grid)) {
-            alive = false;
-            return;
-        }
-        movingPiece.place(grid);
+        nextPiece();
     }
 
     /**
@@ -117,7 +116,6 @@ public class TetrisGrid {
             ghost.targetY += 1;
         }
         ghost.targetY -= 1;
-        System.out.println("ghost.targetY = " + ghost.targetY);
         movingPiece.place(grid);
         return ghost;
     }
