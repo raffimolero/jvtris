@@ -154,7 +154,7 @@ public class Main extends JPanel {
         }
 
         // draw ghost
-        g.setColor(settings.skin.pieceColor(Piece.GARBAGE));
+        g.setColor(settings.skin.pieceColor(Piece.GHOST));
         if (tetris.currentPiece != null) {
             MovableGrid ghost = tetris.dropGhost();
             for (int y = 0; y < ghost.grid.h; y++) {

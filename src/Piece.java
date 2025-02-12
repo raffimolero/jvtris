@@ -7,7 +7,8 @@ public enum Piece {
     S,
     T,
     Z,
-    GARBAGE;
+    GARBAGE,
+    GHOST;
 
     public static final Piece[] PIECES = { I, J, L, O, S, T, Z };
 
