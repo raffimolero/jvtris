@@ -1,6 +1,5 @@
 public class TetrisGrid {
     public boolean alive;
-    Skin skin;
     Grid grid;
     Queue queue;
     Piece heldPiece;
@@ -9,15 +8,20 @@ public class TetrisGrid {
     public int score;
 
     public TetrisGrid() {
-        this(Skin.DEFAULT, 5, 10, 20);
+        this(5, 10, 20);
     }
 
-    public TetrisGrid(Skin skin, int queueLength, int width, int height) {
-        alive = true;
-        grid = new Grid(width, height);
-        this.skin = Skin.DEFAULT;
+    public TetrisGrid(int queueLength, int width, int height) {
         queue = new Queue(queueLength);
-        movingPiece = new MovableGrid(new Grid(0, 0), width / 2, 2);
+        grid = new Grid(width, height);
+        reset();
+    }
+
+    public void reset() {
+        alive = true;
+        grid = new Grid(grid.w, grid.h);
+        queue = new Queue(queue.targetLen);
+        movingPiece = new MovableGrid(new Grid(0, 0), grid.w / 2, 2);
         currentPiece = null;
         heldPiece = null;
         score = 0;
@@ -148,6 +152,7 @@ public class TetrisGrid {
                     case HOLD -> hold();
                     case SOFT_DROP ->  { while (moveBy(0, 1)) {} }
                     case HARD_DROP -> hardDrop();
+                    case RESET -> reset();
                     default -> {}
                 }
             }

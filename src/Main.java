@@ -75,8 +75,9 @@ public class Main extends JPanel {
     private int WIDTH = 600;
     private int size = 25;
     private int margin = 2;
+    private static GameSettings settings = new GameSettings();
     private static TetrisGrid tetris = new TetrisGrid();
-    private static GameController input = new GameController();
+    private static GameController input = new GameController(settings);
 
     private JFrame  frame;
 
@@ -102,7 +103,7 @@ public class Main extends JPanel {
         for (int y = 0; y < tetris.grid.h; y++) {
             for (int x = 0; x < tetris.grid.w; x++) {
                 Piece tile = tetris.grid.getCell(x, y);
-                Color col = tetris.skin.pieceColor(tile);
+                Color col = settings.skin.pieceColor(tile);
                 g.setColor(col);
                 g.fillRect(
                         left + x * tileOffset,
@@ -121,7 +122,7 @@ public class Main extends JPanel {
             for (int y = 0; y < piece.h; y++) {
                 for (int x = 0; x < piece.w; x++) {
                     Piece tile = piece.getCell(x, y);
-                    Color col = tetris.skin.pieceColor(tile);
+                    Color col = settings.skin.pieceColor(tile);
                     g.setColor(col);
                     g.fillRect(
                             (int)(left + (x + offX) * tileOffset),
@@ -141,7 +142,7 @@ public class Main extends JPanel {
             for (int y = 0; y < piece.h; y++) {
                 for (int x = 0; x < piece.w; x++) {
                     Piece tile = piece.getCell(x, y);
-                    Color col = tetris.skin.pieceColor(tile);
+                    Color col = settings.skin.pieceColor(tile);
                     g.setColor(col);
                     g.fillRect(
                             (int)(left + (x + offX) * tileOffset),
@@ -153,7 +154,7 @@ public class Main extends JPanel {
         }
 
         // draw ghost
-        g.setColor(tetris.skin.pieceColor(Piece.GARBAGE));
+        g.setColor(settings.skin.pieceColor(Piece.GARBAGE));
         if (tetris.currentPiece != null) {
             MovableGrid ghost = tetris.dropGhost();
             for (int y = 0; y < ghost.grid.h; y++) {
@@ -214,9 +215,6 @@ public class Main extends JPanel {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                double gravity = 1;
-                int tickMs = (int)(1000 / gravity / GameController.DEFAULT_GRAVITY_TICK_DELAY);
-
                 Main project = new Main();
                 JFrame frame = project.createAndShowGUI();
                 ActionListener tick = new ActionListener() {
@@ -227,7 +225,7 @@ public class Main extends JPanel {
                         frame.repaint();
                     }
                 };
-                Timer timer = new Timer(tickMs, tick);
+                Timer timer = new Timer(settings.tickMs, tick);
                 timer.start();
             }
         });

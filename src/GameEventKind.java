@@ -8,4 +8,5 @@ public enum GameEventKind {
     HOLD,
     SOFT_DROP,
     HARD_DROP,
+    RESET,
 }
