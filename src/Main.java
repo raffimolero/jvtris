@@ -59,6 +59,7 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.util.Hashtable;
 
 /**
  * TODO:
@@ -75,6 +76,7 @@ public class Main extends JPanel {
     private int size = 25;
     private int margin = 2;
     private static TetrisGrid tetris = new TetrisGrid();
+    private static GameController input = new GameController();
 
     private JFrame  frame;
 
@@ -172,6 +174,15 @@ public class Main extends JPanel {
         }
     }
 
+    private static void runEvents() {
+        while (true) {
+            GameEvent event = input.eventQueue.poll();
+            if (event == null) {
+                break;
+            }
+            tetris.input(event);
+        }
+    }
 
     public JFrame createAndShowGUI() {
         JFrame frame = new JFrame("Events Demo");
@@ -185,17 +196,24 @@ public class Main extends JPanel {
         frame.addKeyListener(new KeyAdapter() {
             // Key Pressed method
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_A -> tetris.hold();
-                    case KeyEvent.VK_S -> tetris.rotateBy(3);
-                    case KeyEvent.VK_D -> tetris.rotateBy(2);
-                    case KeyEvent.VK_F -> tetris.rotateBy(1);
-                    case KeyEvent.VK_SPACE -> tetris.hardDrop();
-                    case KeyEvent.VK_K -> tetris.softDrop();
-                    case KeyEvent.VK_J -> tetris.moveBy(-1, 0);
-                    case KeyEvent.VK_L -> tetris.moveBy(1, 0);
-                }
+                input.down(e.getKeyCode());
+                runEvents();
+//                switch (e.getKeyCode()) {
+//                    case KeyEvent.VK_A -> tetris.hold();
+//                    case KeyEvent.VK_S -> tetris.rotateBy(3);
+//                    case KeyEvent.VK_D -> tetris.rotateBy(2);
+//                    case KeyEvent.VK_F -> tetris.rotateBy(1);
+//                    case KeyEvent.VK_SPACE -> tetris.hardDrop();
+//                    case KeyEvent.VK_K -> tetris.softDrop();
+//                    case KeyEvent.VK_J -> tetris.moveBy(-1, 0);
+//                    case KeyEvent.VK_L -> tetris.moveBy(1, 0);
+//                }
                 repaint();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                input.up(e.getKeyCode());
             }
         });
 
@@ -206,14 +224,15 @@ public class Main extends JPanel {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 double gravity = 1;
-                int tickMs = (int)(1000 / gravity);
+                int tickMs = (int)(1000 / gravity / GameController.DEFAULT_GRAVITY_TICK_DELAY);
 
                 Main project = new Main();
                 JFrame frame = project.createAndShowGUI();
                 ActionListener tick = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        tetris.tick();
+                        input.tick();
+                        runEvents();
                         frame.repaint();
                     }
                 };

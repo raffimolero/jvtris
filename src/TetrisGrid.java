@@ -44,7 +44,8 @@ public class TetrisGrid {
 
     public void lockPiece() {
         currentPiece = queue.nextPiece();
-        movingPiece = new MovableGrid(currentPiece.toGrid(), 3, 0);
+        Grid nextPiece = currentPiece.toGrid();
+        movingPiece = new MovableGrid(nextPiece, 3, 0);
         if (movingPiece.isBlocked(grid)) {
             alive = false;
             return;
@@ -134,6 +135,33 @@ public class TetrisGrid {
             }
         }
         return out;
+    }
+
+    public void input(GameEvent e) {
+        switch (e.source()) {
+            case INPUT -> {
+                switch (e.kind()) {
+                    case ROTATE_CW -> rotateBy(1);
+                    case ROTATE_180 -> rotateBy(2);
+                    case ROTATE_CC -> rotateBy(3);
+                    case LEFT -> moveBy(-1, 0);
+                    case RIGHT -> moveBy(1, 0);
+                    // TODO: limit hold to once per piece
+                    case HOLD -> hold();
+                    case SOFT_DROP ->  { while (moveBy(0, 1)) {} }
+                    case HARD_DROP -> hardDrop();
+                    default -> {}
+                }
+            }
+            case WORLD -> {
+                switch (e.kind()) {
+                    case TICK -> softDrop();
+                    case LEFT -> { while (moveBy(-1, 0)) {} }
+                    case RIGHT -> { while (moveBy(1, 0)) {} }
+                    default -> {}
+                }
+            }
+        }
     }
 
     /**
