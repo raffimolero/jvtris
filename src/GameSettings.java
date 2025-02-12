@@ -6,9 +6,9 @@ public class GameSettings {
     public Skin skin = Skin.DEFAULT;
     private Map<Integer, GameEventKind> binds;
     private Map<GameEventKind, Integer> revBinds;
-    public int das = 70;
+    public int das = 60;
     public int gravity = 500;
-    public int tickMs = 1000 / das;
+    public int tickMs = 1000 / 60;
 
     private static Map<Integer, GameEventKind> defaultBinds() {
         Map<Integer, GameEventKind> binds = new Hashtable<>(9);

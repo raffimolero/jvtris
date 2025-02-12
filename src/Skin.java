@@ -3,7 +3,7 @@ import java.awt.*;
 public record Skin(Color[] pieces) {
     public static final Skin DEFAULT = new Skin(
         new Color[] {
-                Color.DARK_GRAY,
+                Color.decode("#202020"),
                 Color.CYAN,
                 Color.BLUE,
                 Color.ORANGE,

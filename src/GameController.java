@@ -6,30 +6,30 @@ import java.util.Queue;
  */
 public class GameController {
     public GameSettings settings;
-    private int gravityNextTick;
+    private int gravityNextTime;
     // contains the tick timestamps of each bind
     public Map<Integer, Integer> heldKeys;
     public Queue<GameEvent> eventQueue;
-    public int currentTick;
+    public int currentTime;
 
     public GameController(GameSettings settings) {
         this.settings = settings;
         heldKeys = new Hashtable<>(settings.getBinds().size());
         eventQueue = new ArrayDeque<>();
-        gravityNextTick = settings.gravity / settings.tickMs;
-        currentTick = 0;
+        gravityNextTime = settings.gravity;
+        currentTime = 0;
     }
 
     public void tick() {
-        currentTick++;
+        currentTime += settings.tickMs;
         for (Map.Entry<Integer, GameEventKind> entry : settings.getBinds().entrySet()) {
-            if (currentTick >= heldKeys.getOrDefault(entry.getKey(), Integer.MAX_VALUE)) {
+            if (currentTime >= heldKeys.getOrDefault(entry.getKey(), Integer.MAX_VALUE)) {
                 eventQueue.add(new GameEvent(entry.getValue(), GameEventSource.WORLD));
             }
         }
-        while (currentTick >= gravityNextTick) {
+        while (currentTime >= gravityNextTime) {
             eventQueue.add(new GameEvent(GameEventKind.TICK, GameEventSource.WORLD));
-            gravityNextTick += settings.gravity / settings.tickMs;
+            gravityNextTime += settings.gravity;
         }
     }
 
@@ -43,7 +43,7 @@ public class GameController {
         int right = settings.getRevBinds().get(GameEventKind.RIGHT);
         if (key == left) heldKeys.remove(right);
         if (key == right) heldKeys.remove(left);
-        heldKeys.put(key, currentTick + settings.das / settings.tickMs);
+        heldKeys.put(key, currentTime + settings.das);
 
         if (settings.getBinds().containsKey(key)) {
             eventQueue.add(new GameEvent(settings.getBinds().get(key), GameEventSource.INPUT));
