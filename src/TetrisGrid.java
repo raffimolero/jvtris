@@ -1,27 +1,33 @@
 public class TetrisGrid {
+    public GameSettings settings;
     public boolean alive;
+    public boolean held;
+    public int score;
     Grid grid;
-    Queue queue;
+    PieceQueue queue;
     Piece heldPiece;
     Piece currentPiece;
     MovableGrid movingPiece;
-    public int score;
 
-    public TetrisGrid() {
-        this(5, 10, 20);
+    public TetrisGrid(GameSettings settings) {
+        this(settings, 5, 10, 20);
     }
 
-    public TetrisGrid(int queueLength, int width, int height) {
-        queue = new Queue(queueLength);
-        grid = new Grid(width, height);
-        reset();
+    public TetrisGrid(GameSettings settings, int queueLength, int width, int height) {
+        this.settings = settings;
+        set(queueLength, width, height);
     }
 
     public void reset() {
+        set(queue.targetLen, grid.w, grid.h);
+    }
+
+    private void set(int queueLength, int width, int height) {
         alive = true;
-        grid = new Grid(grid.w, grid.h);
-        queue = new Queue(queue.targetLen);
-        movingPiece = new MovableGrid(new Grid(0, 0), grid.w / 2, 2);
+        held = false;
+        grid = new Grid(width, height);
+        queue = new PieceQueue(queueLength);
+        movingPiece = new MovableGrid(new Grid(0, 0), width / 2, 2);
         currentPiece = null;
         heldPiece = null;
         score = 0;
@@ -34,11 +40,15 @@ public class TetrisGrid {
             alive = false;
         }
         movingPiece.place(grid);
+        held = false;
     }
 
-    public void hold() {
+    public boolean hold() {
         if (!alive) {
-            return;
+            return false;
+        }
+        if (held) {
+            return false;
         }
         movingPiece.unplace(grid);
         Piece tmp = currentPiece;
@@ -48,6 +58,8 @@ public class TetrisGrid {
             currentPiece = queue.nextPiece();
         }
         nextPiece();
+        held = true;
+        return true;
     }
 
     public void lockPiece() {
@@ -82,19 +94,23 @@ public class TetrisGrid {
                 y++;
             }
         }
-        // TODO: what if movingPiece is blocked
-        movingPiece.place(grid);
+        if (movingPiece.isBlocked(grid)) {
+            alive = false;
+        } else {
+            movingPiece.place(grid);
+        }
         return linesCleared;
     }
 
-    public void tick() {
-        if (!alive) {
-            return;
+    public boolean onGround() {
+        if (moveBy(0, 1)) {
+            moveBy(0, -1);
+            return false;
         }
-        softDrop();
+        return true;
     }
 
-    public void softDrop() {
+    public void gravity() {
         if (!alive) {
             return;
         }
@@ -109,7 +125,7 @@ public class TetrisGrid {
             return;
         }
         while (moveBy(0, 1)) {}
-        softDrop();
+        gravity();
     }
 
     public MovableGrid dropGhost() {
@@ -139,18 +155,22 @@ public class TetrisGrid {
         return out;
     }
 
-    public void input(GameEvent e) {
+    /**
+     * reacts to a GameEvent as input
+     * @param e the game event to react to
+     * @return whether the input was successful
+     */
+    public boolean input(GameEvent e) {
         switch (e.source()) {
             case INPUT -> {
                 switch (e.kind()) {
-                    case ROTATE_CW -> rotateBy(1);
-                    case ROTATE_180 -> rotateBy(2);
-                    case ROTATE_CC -> rotateBy(3);
-                    case LEFT -> moveBy(-1, 0);
-                    case RIGHT -> moveBy(1, 0);
-                    // TODO: limit hold to once per piece
-                    case HOLD -> hold();
-                    case SOFT_DROP ->  { while (moveBy(0, 1)) {} }
+                    case ROTATE_CW -> { return rotateBy(1); }
+                    case ROTATE_180 -> { return rotateBy(2); }
+                    case ROTATE_CC -> { return rotateBy(3); }
+                    case LEFT -> { return moveBy(-1, 0); }
+                    case RIGHT -> { return moveBy(1, 0); }
+                    case HOLD -> { return hold(); }
+                    case SOFT_DROP ->  { return instantMove(0, 1); }
                     case HARD_DROP -> hardDrop();
                     case RESET -> reset();
                     default -> {}
@@ -158,13 +178,22 @@ public class TetrisGrid {
             }
             case WORLD -> {
                 switch (e.kind()) {
-                    case TICK -> softDrop();
-                    case LEFT -> { while (moveBy(-1, 0)) {} }
-                    case RIGHT -> { while (moveBy(1, 0)) {} }
+                    case TICK -> gravity();
+                    case LEFT -> { return instantMove(-1, 0); }
+                    case RIGHT -> { return instantMove(1, 0); }
                     default -> {}
                 }
             }
         }
+        return false;
+    }
+
+    public boolean instantMove(int dx, int dy) {
+        boolean out = false;
+        while (moveBy(dx, dy)) {
+            out = true;
+        }
+        return out;
     }
 
     /**

@@ -1,71 +1,11 @@
-//import javax.swing.*;
-//import java.awt.event.KeyAdapter;
-//import java.awt.event.KeyEvent;
-//import java.util.*;
-//import java.util.Timer;
-//
-//public class Main {
-//    public static void main(String[] args) {
-//        TetrisGrid tetris = new TetrisGrid();
-//
-//        String[] columns = new String[10];
-//        for (int x = 0; x < 10; x++) {
-//            columns[x] = "";
-//        }
-//        final String[][][] grid = {new String[20][10]};
-//        for (int y = 0; y < 20; y++) {
-//            for (int x = 0; x < 10; x++) {
-//                grid[0][y][x] = "" + (x + y) % 7;
-//            }
-//        }
-//
-//        Set<Integer> held = new HashSet<>();
-//
-//        JFrame frame = new JFrame("this is a test");
-//        frame.setSize(200, 400);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.addKeyListener(new KeyAdapter() {
-//            @Override
-//            public void keyPressed(KeyEvent e) {
-//                System.out.println("pressed " + e.getKeyChar());
-//                if (held.add(e.getKeyCode())) {
-//                    switch (e.getKeyChar()) {
-//                        case 'a' -> tetris.moveBy(-1, 0);
-//                        case 'd' -> tetris.moveBy(1, 0);
-//                        case ' ' -> {}
-//                        default -> {}
-//                    }
-//                }
-//                frame.repaint();
-//            }
-//
-//            @Override
-//            public void keyReleased(KeyEvent e) {
-//                if (held.remove(e.getKeyCode())) {
-//                    System.out.println("released " + e.getKeyChar());
-//                }
-//            }
-//        });
-//
-//
-//        JTable table = new JTable(grid[0], columns);
-//        frame.add(table);
-//
-//
-//        frame.setVisible(true);
-//
-//    }
-//}
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.util.Hashtable;
 
 /**
  * TODO:
- * - hard drop
- * - ghost piece
- * - queue
+ * - soft drop grace period
+ * - SRS
  * - tetris clear effect
  * - score system
  */
@@ -76,8 +16,8 @@ public class Main extends JPanel {
     private int size = 25;
     private int margin = 2;
     private static GameSettings settings = new GameSettings();
-    private static TetrisGrid tetris = new TetrisGrid();
-    private static GameController input = new GameController(settings);
+    private static TetrisGrid tetris = new TetrisGrid(settings);
+    private static TetrisController input = new TetrisController(tetris);
 
     private JFrame  frame;
 
@@ -175,16 +115,6 @@ public class Main extends JPanel {
         }
     }
 
-    private static void runEvents() {
-        while (true) {
-            GameEvent event = input.eventQueue.poll();
-            if (event == null) {
-                break;
-            }
-            tetris.input(event);
-        }
-    }
-
     public JFrame createAndShowGUI() {
         JFrame frame = new JFrame("Events Demo");
         frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -198,14 +128,12 @@ public class Main extends JPanel {
             // Key Pressed method
             public void keyPressed(KeyEvent e) {
                 input.down(e.getKeyCode());
-                runEvents();
                 repaint();
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 input.up(e.getKeyCode());
-                runEvents();
             }
         });
 
@@ -221,7 +149,6 @@ public class Main extends JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         input.tick();
-                        runEvents();
                         frame.repaint();
                     }
                 };

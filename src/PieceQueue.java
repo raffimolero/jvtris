@@ -3,11 +3,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Queue {
+public class PieceQueue {
     ArrayList<Piece> queue;
     int targetLen;
 
-    Queue(int targetLength) {
+    PieceQueue(int targetLength) {
         targetLen = targetLength;
         queue = new ArrayList<>(targetLen);
         refill();
