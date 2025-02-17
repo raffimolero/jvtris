@@ -1,16 +1,22 @@
 public class MovableGrid {
     Grid grid;
+    Piece piece;
+    Orientation orientation;
     int targetX;
     int targetY;
 
-    MovableGrid(MovableGrid piece) {
-        grid = new Grid(piece.grid);
-        targetX = piece.targetX;
-        targetY = piece.targetY;
+    MovableGrid(MovableGrid other) {
+        grid = new Grid(other.grid);
+        piece = other.piece;
+        orientation = other.orientation;
+        targetX = other.targetX;
+        targetY = other.targetY;
     }
 
-    MovableGrid(Grid shape, int x, int y) {
-        grid = shape;
+    MovableGrid(Piece piece, int x, int y) {
+        grid = piece.toGrid();
+        this.piece = piece;
+        orientation = Orientation.UP;
         targetX = x;
         targetY = y;
     }
@@ -26,8 +32,9 @@ public class MovableGrid {
         grid = newData;
     }
 
-    public void rotate(int timesCw90) {
-        for (int i = 0; i < timesCw90; i++) {
+    public void rotate(Orientation rotation) {
+        orientation = orientation.rotate(rotation);
+        for (int i = 0; i < rotation.ordinal(); i++) {
             rotateCw();
         }
     }

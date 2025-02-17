@@ -27,7 +27,7 @@ public class TetrisGrid {
         held = false;
         grid = new Grid(width, height);
         queue = new PieceQueue(queueLength);
-        movingPiece = new MovableGrid(new Grid(0, 0), width / 2, 2);
+        movingPiece = new MovableGrid(Piece.EMPTY, width / 2, 2);
         currentPiece = null;
         heldPiece = null;
         score = 0;
@@ -35,7 +35,7 @@ public class TetrisGrid {
 
     private void nextPiece() {
         Grid piece = currentPiece.toGrid();
-        movingPiece = new MovableGrid(piece, 5 - ((piece.w + 1) / 2), 0);
+        movingPiece = new MovableGrid(currentPiece, 5 - ((piece.w + 1) / 2), 0);
         if (movingPiece.isBlocked(grid)) {
             alive = false;
         }
@@ -164,9 +164,9 @@ public class TetrisGrid {
         switch (e.source()) {
             case INPUT -> {
                 switch (e.kind()) {
-                    case ROTATE_CW -> { return rotateBy(1); }
-                    case ROTATE_180 -> { return rotateBy(2); }
-                    case ROTATE_CC -> { return rotateBy(3); }
+                    case ROTATE_CW -> { return rotateBy(Orientation.RIGHT); }
+                    case ROTATE_180 -> { return rotateBy(Orientation.DOWN); }
+                    case ROTATE_CC -> { return rotateBy(Orientation.LEFT); }
                     case LEFT -> { return moveBy(-1, 0); }
                     case RIGHT -> { return moveBy(1, 0); }
                     case HOLD -> { return hold(); }
@@ -225,10 +225,10 @@ public class TetrisGrid {
     /**
      * Attempts to rotate the moving piece 90 degrees clockwise times the argument.
      * rotation happens at once; there are no intermediate steps.
-     * @param timesCw90 the number of times to rotate the piece clockwise.
+     * @param delta the number of times to rotate the piece clockwise.
      * @return true if the space is not blocked in the target grid; false otherwise.
      */
-    public boolean rotateBy(int timesCw90) {
+    public boolean rotateBy(Orientation delta) {
         if (!alive) {
             return false;
         }
@@ -237,11 +237,10 @@ public class TetrisGrid {
             return false;
         }
         movingPiece.unplace(grid);
-        timesCw90 %= 4;
-        movingPiece.rotate(timesCw90);
+        movingPiece.rotate(delta);
         boolean isBlocked = movingPiece.isBlocked(grid);
         if (isBlocked) {
-            movingPiece.rotate(4 - timesCw90);
+            movingPiece.rotate(Orientation.values()[4 - delta.ordinal()]);
         }
         movingPiece.place(grid);
         return !isBlocked;
