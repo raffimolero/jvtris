@@ -57,10 +57,12 @@ public class KickTable {
     }
 
     public static Point[] mirror(Point[] ps) {
+        // TODO: manually mirror
         return (Point[]) Arrays.stream(ps).map((p) -> new Point(-p.x(), p.y())).toArray();
     }
 
     public static Point[] diff(Point[] a, Point[] b) {
+        // FIXME: b[i] is sometimes null
         Point[] out = new Point[a.length];
         for (int i = 0; i < a.length; i++) {
             out[i] = a[i].add(b[i].neg());
