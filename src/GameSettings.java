@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class GameSettings {
     public Skin skin = Skin.DEFAULT;
+    public KickTable kickTable = new KickTable();
     private Map<Integer, GameEventKind> binds;
     private Map<GameEventKind, Integer> revBinds;
     public int das = 60;

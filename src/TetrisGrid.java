@@ -238,7 +238,21 @@ public class TetrisGrid {
         }
         movingPiece.unplace(grid);
         movingPiece.rotate(delta);
-        boolean isBlocked = movingPiece.isBlocked(grid);
+
+        boolean isBlocked = false;
+        for (Point p : settings.kickTable.kicks(movingPiece.piece, movingPiece.orientation, delta)) {
+            movingPiece.targetX += p.x();
+            movingPiece.targetX -= p.y();
+
+            isBlocked = movingPiece.isBlocked(grid);
+            if (isBlocked) {
+                movingPiece.targetX -= p.x();
+                movingPiece.targetX += p.y();
+            } else {
+                break;
+            }
+        }
+
         if (isBlocked) {
             movingPiece.rotate(Orientation.values()[4 - delta.ordinal()]);
         }
