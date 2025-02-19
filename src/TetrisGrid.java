@@ -20,32 +20,11 @@ public class TetrisGrid {
 
     public void reset() {
         set(queue.targetLen, grid.w, grid.h);
-        load("TTTTTTTT", """
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                ..........
-                xx......xx
-                x........x
-                x.xxxxxx.x
-                x..xxxx..x
-                x.xxxxxx.x
-        """);
+        load(Preset.LST);
     }
 
-    public void load(String queue, String pattern) {
-        String[] lines = pattern.split("\\n");
+    public void load(Preset p) {
+        String[] lines = p.pattern().split("\\n");
         for (int y = 0; y < grid.h; y++) {
             String line = lines[y].trim();
             for (int x = 0; x < grid.w; x++) {
@@ -53,11 +32,11 @@ public class TetrisGrid {
             }
         }
 
-        this.queue.queue.clear();
-        for (int i = 0; i < queue.length(); i++) {
-            this.queue.queue.add(Piece.fromChar(queue.charAt(i)));
+        queue.queue.clear();
+        for (int i = 0; i < p.queue().length(); i++) {
+            queue.queue.add(Piece.fromChar(p.queue().charAt(i)));
         }
-        this.queue.refill();
+        queue.refill();
     }
 
     private void set(int queueLength, int width, int height) {
