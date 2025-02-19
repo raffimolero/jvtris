@@ -1,7 +1,6 @@
-import java.util.Arrays;
-
 public class KickTable {
-    private static final Point[] noOff = {
+    private static final Point[] noOff = { new Point(0, 0) };
+    private static final Point[] noOffx5 = {
             new Point(0, 0),
             new Point(0, 0),
             new Point(0, 0),
@@ -17,9 +16,9 @@ public class KickTable {
             new Point(1, 2),
     };
     private static final Point[][] off3x3R90 = {
-            noOff,
+            noOffx5,
             off3x3R,
-            noOff,
+            noOffx5,
             mirror(off3x3R),
     };
 
@@ -49,7 +48,7 @@ public class KickTable {
         Point[][] out = new Point[4][5];
         for (int orient = 0; orient < 4; orient++) {
             Point off = input[orient][0].neg();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 out[orient][i] = input[orient][i].add(off);
             }
         }
@@ -57,12 +56,14 @@ public class KickTable {
     }
 
     public static Point[] mirror(Point[] ps) {
-        // TODO: manually mirror
-        return (Point[]) Arrays.stream(ps).map((p) -> new Point(-p.x(), p.y())).toArray();
+        Point[] out = new Point[ps.length];
+        for (int i = 0; i < ps.length; i++) {
+            out[i] = new Point(-ps[i].x(), ps[i].y());
+        }
+        return out;
     }
 
     public static Point[] diff(Point[] a, Point[] b) {
-        // FIXME: b[i] is sometimes null
         Point[] out = new Point[a.length];
         for (int i = 0; i < a.length; i++) {
             out[i] = a[i].add(b[i].neg());

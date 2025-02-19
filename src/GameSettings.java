@@ -7,9 +7,9 @@ public class GameSettings {
     public KickTable kickTable = new KickTable();
     private Map<Integer, GameEventKind> binds;
     private Map<GameEventKind, Integer> revBinds;
-    public int das = 60;
+    public int das = 50;
     public int gravity = 500;
-    public int tickMs = 1000 / 60;
+    public int tickMs = 1000 / 120;
 
     private static Map<Integer, GameEventKind> defaultBinds() {
         Map<Integer, GameEventKind> binds = new Hashtable<>(9);

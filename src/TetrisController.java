@@ -45,7 +45,8 @@ public class TetrisController {
         int right = tetris.settings.getRevBinds().get(GameEventKind.RIGHT);
         if (key == left) heldKeys.remove(right);
         if (key == right) heldKeys.remove(left);
-        heldKeys.put(key, currentTime + tetris.settings.das);
+        int repeatDelay = (key == left || key == right) ? tetris.settings.das : 0;
+        heldKeys.put(key, currentTime + repeatDelay);
 
         boolean isValidBind = tetris.settings.getBinds().containsKey(key);
         if (isValidBind) {
@@ -66,9 +67,7 @@ public class TetrisController {
             GameEvent event = eventQueue.poll();
             if (event == null) break;
             if (tetris.input(event)) {
-                System.out.println("inputted");
                 if (tetris.onGround()) {
-                    System.out.println("tick");
                     gravityNextTime = currentTime + tetris.settings.gravity;
                 }
             }

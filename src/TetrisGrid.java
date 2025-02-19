@@ -170,7 +170,6 @@ public class TetrisGrid {
                     case LEFT -> { return moveBy(-1, 0); }
                     case RIGHT -> { return moveBy(1, 0); }
                     case HOLD -> { return hold(); }
-                    case SOFT_DROP ->  { return instantMove(0, 1); }
                     case HARD_DROP -> hardDrop();
                     case RESET -> reset();
                     default -> {}
@@ -181,6 +180,7 @@ public class TetrisGrid {
                     case TICK -> gravity();
                     case LEFT -> { return instantMove(-1, 0); }
                     case RIGHT -> { return instantMove(1, 0); }
+                    case SOFT_DROP ->  { return instantMove(0, 1); }
                     default -> {}
                 }
             }
@@ -239,16 +239,25 @@ public class TetrisGrid {
         movingPiece.unplace(grid);
         movingPiece.rotate(delta);
 
+        // check kick table
         boolean isBlocked = false;
-        for (Point p : settings.kickTable.kicks(movingPiece.piece, movingPiece.orientation, delta)) {
+        Point[] table = settings.kickTable.kicks(movingPiece.piece, movingPiece.orientation, delta);
+        for (int i = 0; i < table.length; i++) {
+            Point p = table[i];
+            
             movingPiece.targetX += p.x();
-            movingPiece.targetX -= p.y();
+            movingPiece.targetY += p.y();
 
             isBlocked = movingPiece.isBlocked(grid);
             if (isBlocked) {
                 movingPiece.targetX -= p.x();
-                movingPiece.targetX += p.y();
+                movingPiece.targetY -= p.y();
             } else {
+                if (i != 0) {
+                    System.out.println("i = " + i);
+                    System.out.println("p.x() = " + p.x());
+                    System.out.println("p.y() = " + p.y());
+                }
                 break;
             }
         }
