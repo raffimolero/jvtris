@@ -20,7 +20,6 @@ public class TetrisGrid {
 
     public void reset() {
         set(queue.targetLen, grid.w, grid.h);
-        load(Preset.LST);
     }
 
     public void load(Preset p) {
