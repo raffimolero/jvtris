@@ -38,7 +38,6 @@ public enum Piece {
     public Grid toGrid() {
         Grid out;
 
-        // it works ok
         switch (this) {
             case I -> {
                 out = new Grid(4, 4);

@@ -262,29 +262,16 @@ public class TetrisGrid {
         // check kick table
         boolean isBlocked = false;
         System.out.println("TESTING");
-        for (int i = 0; i < table.length; i++) {
-            Point p = table[i];
-            
+        for (Point p : table) {
             movingPiece.targetX += p.x();
             movingPiece.targetY -= p.y();
 
             isBlocked = movingPiece.isBlocked(grid);
-            if (isBlocked) {
-                movingPiece.targetX -= p.x();
-                movingPiece.targetY += p.y();
-                System.out.println("FAIL: ");
-                System.out.println("p.x() = " + p.x());
-                System.out.println("p.y() = " + p.y());
-                System.out.println();
-            } else {
-                if (i != 0) {
-                    System.out.println("i = " + i);
-                    System.out.println("p.x() = " + p.x());
-                    System.out.println("p.y() = " + p.y());
-                    System.out.println();
-                }
+            if (!isBlocked) {
                 break;
             }
+            movingPiece.targetX -= p.x();
+            movingPiece.targetY += p.y();
         }
 
         if (isBlocked) {

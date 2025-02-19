@@ -4,8 +4,7 @@ import java.awt.*;
 
 /**
  * TODO:
- * - soft drop grace period
- * - SRS
+ * - better soft drop grace period (sometimes it locks you instantly on softdrop)
  * - tetris clear effect
  * - score system
  */
