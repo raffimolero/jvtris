@@ -20,6 +20,46 @@ public class TetrisGrid {
 
     public void reset() {
         set(queue.targetLen, grid.w, grid.h);
+        String pattern = """
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                oo........
+                o.........
+                o.oooooooo
+                o..ooooooo
+                o.oooooooo
+        """;
+        String[] lines = pattern.split("\\n");
+        for (int y = 0; y < grid.h; y++) {
+            String line = lines[y].trim();
+            for (int x = 0; x < grid.w; x++) {
+                char c = line.charAt(x);
+                if (c == 'o') {
+                    grid.setCell(x, y, Piece.GARBAGE);
+                }
+            }
+        }
+        queue.queue.clear();
+        queue.queue.add(Piece.T);
+        queue.queue.add(Piece.T);
+        queue.queue.add(Piece.T);
+        queue.queue.add(Piece.T);
+        queue.queue.add(Piece.T);
+        queue.queue.add(Piece.T);
+        queue.queue.add(Piece.T);
     }
 
     private void set(int queueLength, int width, int height) {
@@ -246,12 +286,12 @@ public class TetrisGrid {
             Point p = table[i];
             
             movingPiece.targetX += p.x();
-            movingPiece.targetY += p.y();
+            movingPiece.targetY -= p.y();
 
             isBlocked = movingPiece.isBlocked(grid);
             if (isBlocked) {
                 movingPiece.targetX -= p.x();
-                movingPiece.targetY -= p.y();
+                movingPiece.targetY += p.y();
             } else {
                 if (i != 0) {
                     System.out.println("i = " + i);
