@@ -20,7 +20,7 @@ public class TetrisGrid {
 
     public void reset() {
         set(queue.targetLen, grid.w, grid.h);
-        String pattern = """
+        load("TTTTTTTT", """
                 ..........
                 ..........
                 ..........
@@ -36,30 +36,28 @@ public class TetrisGrid {
                 ..........
                 ..........
                 ..........
-                oo......oo
-                o........o
-                o.oooooo.o
-                o..oooo..o
-                o.oooooo.o
-        """;
+                xx......xx
+                x........x
+                x.xxxxxx.x
+                x..xxxx..x
+                x.xxxxxx.x
+        """);
+    }
+
+    public void load(String queue, String pattern) {
         String[] lines = pattern.split("\\n");
         for (int y = 0; y < grid.h; y++) {
             String line = lines[y].trim();
             for (int x = 0; x < grid.w; x++) {
-                char c = line.charAt(x);
-                if (c == 'o') {
-                    grid.setCell(x, y, Piece.GARBAGE);
-                }
+                grid.setCell(x, y, Piece.fromChar(line.charAt(x)));
             }
         }
-        queue.queue.clear();
-        queue.queue.add(Piece.T);
-        queue.queue.add(Piece.T);
-        queue.queue.add(Piece.T);
-        queue.queue.add(Piece.T);
-        queue.queue.add(Piece.T);
-        queue.queue.add(Piece.T);
-        queue.queue.add(Piece.T);
+
+        this.queue.queue.clear();
+        for (int i = 0; i < queue.length(); i++) {
+            this.queue.queue.add(Piece.fromChar(queue.charAt(i)));
+        }
+        this.queue.refill();
     }
 
     private void set(int queueLength, int width, int height) {

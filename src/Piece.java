@@ -12,6 +12,21 @@ public enum Piece {
 
     public static final Piece[] PIECES = { I, J, L, O, S, T, Z };
 
+    public static Piece fromChar(char c) {
+        switch (c) {
+            case '.' -> { return Piece.EMPTY; }
+            case 'I' -> { return Piece.I; }
+            case 'J' -> { return Piece.J; }
+            case 'L' -> { return Piece.L; }
+            case 'O' -> { return Piece.O; }
+            case 'S' -> { return Piece.S; }
+            case 'T' -> { return Piece.T; }
+            case 'Z' -> { return Piece.Z; }
+            case 'x' -> { return Piece.GARBAGE; }
+            default -> { return Piece.GHOST; }
+        }
+    }
+
     public boolean isEmpty() {
         return this == EMPTY;
     }
