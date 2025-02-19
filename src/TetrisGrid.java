@@ -36,11 +36,11 @@ public class TetrisGrid {
                 ..........
                 ..........
                 ..........
-                oo........
-                o.........
-                o.oooooooo
-                o..ooooooo
-                o.oooooooo
+                oo......oo
+                o........o
+                o.oooooo.o
+                o..oooo..o
+                o.oooooo.o
         """;
         String[] lines = pattern.split("\\n");
         for (int y = 0; y < grid.h; y++) {
@@ -276,12 +276,16 @@ public class TetrisGrid {
         if (movingPiece.grid.w * movingPiece.grid.h == 0) {
             return false;
         }
+
+        // get kick table
+        Point[] table = settings.kickTable.kicks(movingPiece.piece, movingPiece.orientation, delta);
+
         movingPiece.unplace(grid);
         movingPiece.rotate(delta);
 
         // check kick table
         boolean isBlocked = false;
-        Point[] table = settings.kickTable.kicks(movingPiece.piece, movingPiece.orientation, delta);
+        System.out.println("TESTING");
         for (int i = 0; i < table.length; i++) {
             Point p = table[i];
             
@@ -292,11 +296,16 @@ public class TetrisGrid {
             if (isBlocked) {
                 movingPiece.targetX -= p.x();
                 movingPiece.targetY += p.y();
+                System.out.println("FAIL: ");
+                System.out.println("p.x() = " + p.x());
+                System.out.println("p.y() = " + p.y());
+                System.out.println();
             } else {
                 if (i != 0) {
                     System.out.println("i = " + i);
                     System.out.println("p.x() = " + p.x());
                     System.out.println("p.y() = " + p.y());
+                    System.out.println();
                 }
                 break;
             }

@@ -29,6 +29,14 @@ public class KickTable {
             { new Point(0, 1), new Point(0, 1), new Point(0, 1), new Point(0, -1), new Point(0, 2) },
     });
 
+    public static final Point[] offNorthR180 = {
+            new Point(0, 0),
+            new Point(0, 1),
+            new Point(1, 1),
+            new Point(-1, 1),
+            new Point(1, 0),
+            new Point(-1, 0)
+    };
     private static final Point[] offEastR180 = {
             new Point(0, 0),
             new Point(1, 0),
@@ -38,9 +46,9 @@ public class KickTable {
             new Point(0, 1),
     };
     private static final Point[][] offR180 = {
-            { new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(-1, 1), new Point(1, 0), new Point(-1, 0) },
+            offNorthR180,
             offEastR180,
-            { new Point(0, 0), new Point(0, -1), new Point(-1, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0) },
+            neg(offNorthR180),
             mirror(offEastR180),
     };
 
@@ -63,6 +71,14 @@ public class KickTable {
         return out;
     }
 
+    public static Point[] neg(Point[] in) {
+        Point[] out = new Point[in.length];
+        for (int i = 0; i < in.length; i++) {
+            out[i] = in[i].neg();
+        }
+        return out;
+    }
+
     public static Point[] diff(Point[] a, Point[] b) {
         Point[] out = new Point[a.length];
         for (int i = 0; i < a.length; i++) {
@@ -72,6 +88,7 @@ public class KickTable {
     }
 
     private Point[] kicksInternal(Point[][] r90, Point[][] r180, Orientation from, Orientation delta) {
+        System.out.println("from = " + from);
         int a = from.ordinal();
         int b = (a + delta.ordinal()) % 4;
         switch (delta) {
