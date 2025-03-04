@@ -11,6 +11,7 @@ public record Skin(Color[] pieces) {
                 Color.GREEN,
                 Color.MAGENTA,
                 Color.RED,
+                Color.WHITE,
                 Color.LIGHT_GRAY,
                 Color.DARK_GRAY,
         }

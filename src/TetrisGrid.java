@@ -261,7 +261,6 @@ public class TetrisGrid {
 
         // check kick table
         boolean isBlocked = false;
-        System.out.println("TESTING");
         for (Point p : table) {
             movingPiece.targetX += p.x();
             movingPiece.targetY -= p.y();

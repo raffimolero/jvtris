@@ -40,21 +40,28 @@ public class TetrisController {
             return;
         }
 
-        // cancel some binds
-        int left = tetris.settings.getRevBinds().get(GameEventKind.LEFT);
-        int right = tetris.settings.getRevBinds().get(GameEventKind.RIGHT);
-        if (key == left) heldKeys.remove(right);
-        if (key == right) heldKeys.remove(left);
-        int repeatDelay = (key == left || key == right) ? tetris.settings.das : 0;
-        heldKeys.put(key, currentTime + repeatDelay);
+        // macros
+        GameEventKind[] macro = tetris.settings.getMacros().get(key);
+        if (macro != null) {
+            for (GameEventKind eventKind : macro) {
+                eventQueue.add(new GameEvent(eventKind, GameEventSource.INPUT));
+            }
+        } else {
+            // cancel some binds
+            int left = tetris.settings.getRevBinds().get(GameEventKind.LEFT);
+            int right = tetris.settings.getRevBinds().get(GameEventKind.RIGHT);
+            if (key == left) heldKeys.remove(right);
+            if (key == right) heldKeys.remove(left);
+            int repeatDelay = (key == left || key == right) ? tetris.settings.das : 0;
+            heldKeys.put(key, currentTime + repeatDelay);
 
-        boolean isValidBind = tetris.settings.getBinds().containsKey(key);
-        if (isValidBind) {
-            eventQueue.add(new GameEvent(tetris.settings.getBinds().get(key), GameEventSource.INPUT));
+            boolean isValidBind = tetris.settings.getBinds().containsKey(key);
+            if (isValidBind) {
+                eventQueue.add(new GameEvent(tetris.settings.getBinds().get(key), GameEventSource.INPUT));
+            }
         }
 
         runEvents();
-
     }
 
     public void up(int key) {

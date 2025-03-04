@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * TODO:
@@ -140,6 +141,12 @@ public class Main extends JPanel {
     }
 
     public static void main(String[] args) {
+        try {
+            KickTable.dump();
+        } catch (IOException e) {
+            System.out.println("could not dump kick table");
+            System.out.println(e);
+        }
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Main project = new Main();

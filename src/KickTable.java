@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class KickTable {
     private static final Point[] noOff = { new Point(0, 0) };
     private static final Point[] noOffx5 = {
@@ -52,6 +55,25 @@ public class KickTable {
             mirror(offEastR180),
     };
 
+    public static void dump() throws IOException {
+        KickTable table = new KickTable();
+        FileWriter out = new FileWriter("kicks.csv");
+        for (Piece p : Piece.PIECES) {
+            for (Orientation o : Orientation.values()) {
+                for (Orientation d : Orientation.values()) {
+                    out.write(p + "\t");
+                    out.write(o.toString().charAt(0) + "\t");
+                    out.write(d.toString().charAt(0) + "\t");
+                    for (Point kick : table.kicks(p, o, d)) {
+                        out.write(kick.x() + "," + kick.y() + "\t");
+                    }
+                    out.write("\n");
+                }
+            }
+        }
+        out.close();
+    }
+
     private static Point[][] removeBaseOffset(Point[][] input) {
         Point[][] out = new Point[4][5];
         for (int orient = 0; orient < 4; orient++) {
@@ -88,7 +110,6 @@ public class KickTable {
     }
 
     private Point[] kicksInternal(Point[][] r90, Point[][] r180, Orientation from, Orientation delta) {
-        System.out.println("from = " + from);
         int a = from.ordinal();
         int b = (a + delta.ordinal()) % 4;
         switch (delta) {
