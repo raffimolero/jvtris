@@ -23,14 +23,14 @@ public class TetrisController {
 
     public void tick() {
         currentTime += tetris.settings.tickMs;
+        while (currentTime >= gravityNextTime) {
+            eventQueue.add(new GameEvent(GameEventKind.TICK, GameEventSource.WORLD));
+            gravityNextTime += tetris.settings.gravity;
+        }
         for (Map.Entry<Integer, GameEventKind> entry : tetris.settings.getBinds().entrySet()) {
             if (currentTime >= heldKeys.getOrDefault(entry.getKey(), Integer.MAX_VALUE)) {
                 eventQueue.add(new GameEvent(entry.getValue(), GameEventSource.WORLD));
             }
-        }
-        while (currentTime >= gravityNextTime) {
-            eventQueue.add(new GameEvent(GameEventKind.TICK, GameEventSource.WORLD));
-            gravityNextTime += tetris.settings.gravity;
         }
         runEvents();
     }

@@ -39,6 +39,16 @@ public enum Piece {
         Grid out;
 
         switch (this) {
+            case GARBAGE -> {
+                int w = 5;
+                int h = 4;
+                out = new Grid(w, h);
+                for (int y = 0; y < h; y++) {
+                    for (int x = 0; x < w; x++) {
+                        out.setCell(x, y, this);
+                    }
+                }
+            }
             case I -> {
                 out = new Grid(4, 4);
                 out.setCell(0, 1, this);

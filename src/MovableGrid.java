@@ -26,7 +26,7 @@ public class MovableGrid {
         for (int y = 0; y < newData.h; y++) {
             for (int x = 0; x < newData.w; x++) {
                 //noinspection SuspiciousNameCombination
-                newData.setCell(x, y, grid.getCell(y, grid.w-1 - x));
+                newData.setCell(x, y, grid.getCell(y, grid.h-1 - x));
             }
         }
         grid = newData;
@@ -40,8 +40,8 @@ public class MovableGrid {
     }
 
     public boolean isBlocked(Grid target) {
-        for (int y = 0; y < grid.w; y++) {
-            for (int x = 0; x < grid.h; x++) {
+        for (int y = 0; y < grid.h; y++) {
+            for (int x = 0; x < grid.w; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
                 if (grid.getCell(x, y).isBlocked() && target.getCell(destX, destY).isBlocked()) {
@@ -53,8 +53,8 @@ public class MovableGrid {
     }
 
     public void unplace(Grid target) {
-        for (int y = 0; y < grid.w; y++) {
-            for (int x = 0; x < grid.h; x++) {
+        for (int y = 0; y < grid.h; y++) {
+            for (int x = 0; x < grid.w; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
                 Piece cell = grid.getCell(x, y);
@@ -72,8 +72,8 @@ public class MovableGrid {
      */
     public void place(Grid target) {
         assert !isBlocked(target);
-        for (int y = 0; y < grid.w; y++) {
-            for (int x = 0; x < grid.h; x++) {
+        for (int y = 0; y < grid.h; y++) {
+            for (int x = 0; x < grid.w; x++) {
                 int destX = targetX + x;
                 int destY = targetY + y;
                 Piece cell = grid.getCell(x, y);
