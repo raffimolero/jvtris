@@ -10,6 +10,7 @@ public class GameSettings {
     public int das = 50;
     public int gravity = 500;
     public int tickMs = 1000 / 120;
+    public int garbageHeight = 10;
 
     private static Map<Integer, GameEventKind> defaultBinds() {
         Map<Integer, GameEventKind> binds = new Hashtable<>(9);
