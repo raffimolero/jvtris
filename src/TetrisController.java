@@ -76,6 +76,8 @@ public class TetrisController {
             if (tetris.input(event)) {
                 if (tetris.onGround()) {
                     gravityNextTime = currentTime + tetris.settings.gravity;
+                } else if (event.equals(new GameEvent(GameEventKind.RESET, GameEventSource.INPUT))) {
+                    gravityNextTime = currentTime;
                 }
             }
         }

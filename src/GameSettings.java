@@ -25,7 +25,6 @@ public class GameSettings {
         binds.put(KeyEvent.VK_SPACE, GameEventKind.HARD_DROP);
         binds.put(KeyEvent.VK_NUMPAD0, GameEventKind.RESET);
 
-//        binds.put(KeyEvent.VK_SPACE, GameEventKind.HOLD);
         return binds;
     }
 
@@ -96,6 +95,10 @@ public class GameSettings {
                 macros.put(keys[r][m], macro);
             }
         }
+
+        macros.put(KeyEvent.VK_SPACE, new GameEventKind[]{ GameEventKind.HOLD });
+        macros.put(KeyEvent.VK_NUMPAD7, new GameEventKind[]{ GameEventKind.ROTATE_CC });
+        macros.put(KeyEvent.VK_NUMPAD9, new GameEventKind[]{ GameEventKind.ROTATE_CW });
         return macros;
     }
 

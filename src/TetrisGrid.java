@@ -121,11 +121,12 @@ public class TetrisGrid {
     }
 
     public boolean onGround() {
-        if (moveBy(0, 1)) {
-            moveBy(0, -1);
-            return false;
-        }
-        return true;
+        movingPiece.unplace(grid);
+        movingPiece.targetY++;
+        boolean onGround = movingPiece.isBlocked(grid);
+        movingPiece.targetY--;
+        movingPiece.place(grid);
+        return onGround;
     }
 
     public void gravity() {
@@ -251,7 +252,7 @@ public class TetrisGrid {
                     case HOLD -> { return hold(); }
                     case HARD_DROP -> hardDrop();
                     case RESET -> reset();
-                    default -> {}
+                    default -> { return false; }
                 }
             }
             case WORLD -> {
@@ -260,11 +261,11 @@ public class TetrisGrid {
                     case LEFT -> { return instantMove(-1, 0); }
                     case RIGHT -> { return instantMove(1, 0); }
                     case SOFT_DROP ->  { return instantMove(0, 1); }
-                    default -> {}
+                    default -> { return false; }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public boolean instantMove(int dx, int dy) {
