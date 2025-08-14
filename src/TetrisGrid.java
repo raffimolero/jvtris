@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class TetrisGrid {
     public GameSettings settings;
     public boolean alive;
@@ -133,6 +135,67 @@ public class TetrisGrid {
         if (!moveBy(0, 1)) {
             lockPiece();
             score += clearLines();
+            refillGarbage();
+        }
+    }
+
+    public void refillGarbage() {
+        if (settings.garbageHeight <= 0) {
+            return;
+        }
+        int targetGarbageRow = grid.h - settings.garbageHeight;
+        while (!rowHasGarbage(targetGarbageRow)) {
+            addGarbage();
+        }
+    }
+
+    private boolean rowHasGarbage(int row) {
+        boolean cell0IsGarbage = grid.getCell(0, row) == Piece.GARBAGE;
+        boolean cell1IsGarbage = grid.getCell(1, row) == Piece.GARBAGE;
+        return cell0IsGarbage || cell1IsGarbage;
+    }
+
+    /// Adds 1 line of garbage with a hole at a random x position different from the previous hole position
+    private int previousHoleX = -1;
+    public void addGarbage() {
+        int x;
+        if (previousHoleX == -1) {
+            x = new Random().nextInt(10);
+        } else {
+            x = new Random().nextInt(9);
+            if (x == previousHoleX) {
+                x = 9;
+            }
+        }
+        addGarbage(x);
+        previousHoleX = x;
+    }
+
+    /// Adds 1 line of garbage with a hole at the specified x position
+    public void addGarbage(int holeX) {
+        // remove player piece
+        movingPiece.unplace(grid);
+
+        // shift tiles up
+        for (int y = 0; y < grid.h - 1; y++) {
+            for (int x = 0; x < grid.w; x++) {
+                grid.setCell(x, y, grid.getCell(x, y + 1));
+            }
+        }
+
+        // add garbage line
+        int bottom = grid.h - 1;
+        for (int x = 0; x < grid.w; x++) {
+            grid.setCell(x, bottom, Piece.GARBAGE);
+        }
+        // add hole
+        grid.setCell(holeX, bottom, Piece.EMPTY);
+
+        // put player piece back
+        if (movingPiece.isBlocked(grid)) {
+            alive = false;
+        } else {
+            movingPiece.place(grid);
         }
     }
 
